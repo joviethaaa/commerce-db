@@ -188,6 +188,23 @@ Formal normalization evidence remains subject to detailed dependency analysis.
 
 ## 10. Planned Test Scenarios
 
+The following test cases are designed to validate CommerceDB's data integrity, transactional consistency, and business rules.
+
 | Test ID | Scenario | Expected Result |
 |---|---|---|
-| TC
+| TC-001 | Insert an order with an invalid customer_id | Rejected by foreign key constraint |
+| TC-002 | Insert a product with a duplicate SKU | Rejected by unique constraint |
+| TC-003 | Insert an order item with quantity zero | Rejected by check constraint |
+| TC-004 | Reserve inventory exceeding available stock | Reservation rejected without changing inventory balances |
+| TC-005 | Two customers concurrently purchase the last available unit | Only one reservation succeeds; no overselling occurs |
+| TC-006 | Cancel the same unpaid order multiple times | Active reservations are released exactly once |
+| TC-007 | Record two successful payment attempts for one order | Second successful payment is rejected |
+| TC-008 | Update a product's catalog price | Historical order item prices remain unchanged |
+| TC-009 | Update a customer's saved address | Existing order shipping address snapshots remain unchanged |
+| TC-010 | Create a shipment before successful payment | Shipment creation is rejected |
+| TC-011 | Attempt an invalid order status transition | Transition is rejected and no invalid history entry is created |
+| TC-012 | Restore the database from a backup | Database restore succeeds and restored data passes integrity checks |
+
+**Testing Status:** All scenarios are planned and have not yet been executed.
+
+**Validation Approach:** Each scenario will be implemented using SQL-based integrity tests or controlled transactional tests during the physical database implementation phase.
